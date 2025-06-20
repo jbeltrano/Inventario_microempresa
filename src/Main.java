@@ -7,6 +7,11 @@
  *
  * @author juanp
  */
+
+import java.awt.Dimension;
+import javax.swing.*;
+import com.formdev.flatlaf.FlatLightLaf;
+
 public class Main {
 
     /**
@@ -14,7 +19,14 @@ public class Main {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        System.out.println("hola mundo");
+        FlatLightLaf.setup();
+        JFrame frame = new JFrame("I am here");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
+        frame.setPreferredSize(new Dimension(300,300));
+        frame.setMinimumSize(new Dimension(300,300));
+        frame.setVisible(true);
+
     }
     
 }
