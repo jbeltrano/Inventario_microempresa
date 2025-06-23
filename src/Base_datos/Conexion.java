@@ -17,12 +17,8 @@ public class Conexion {
     private static String url = "jdbc:sqlite:";    // String util para la conexion
     private static boolean band = true;     // variable para manejar la excepcion
     protected Connection conexion;          // Variable para establecer la conexion con la base de datos
-    protected String insert;                // Variable que se utiliza para realizar inserts
-    protected String update;                // Variable que se utiliza para realizar updates
-    protected String delete;                // VAriable que se uitliza para realizar deletes
-    protected String query;                 // VAriable que se utilzia para realizar consultas
     protected Statement state;              // Variable que se utiliza para operaciones sin variables
-    protected ResultSet resutl;             // Variable para almacenar los resultados
+    protected ResultSet result;             // Variable para almacenar los resultados
     protected PreparedStatement pstate;     // Variable que se utiliza para operaciones con variables
 
 

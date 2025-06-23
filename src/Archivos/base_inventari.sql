@@ -1,0 +1,151 @@
+-- TABLA TESTEADA CORRECTAMENTE
+DROP TABLE PRODUCTO;
+CREATE TABLE PRODUCTO(
+    
+    pro_id INTEGER PRIMARY KEY AUTOINCREMENT,   -- Id del producto
+    pro_nombre TEXT,                            -- Nombre del producto
+    pro_precio_compra INTEGER,                  -- Precio en el que se compra el producto
+    pro_precio_venta INTENGER                   -- Precio en el que se piensa vender
+
+);
+
+-- TABLA TESTEADA CORRECTAMENTE
+DROP TABLE UBICACION;
+CREATE TABLE UBICACION(
+
+    ubi_id INTEGER PRIMARY KEY AUTOINCREMENT,   -- Id de la ubicacion
+    ubi_nombre TEXT                             -- nombre de la ubicacion
+        
+);
+
+-- TABLA TESTEADA CORRECTAMENTE
+DROP TABLE PRODUCTO_HAS_UBICACION;
+CREATE TABLE PRODUCTO_HAS_UBICACION(
+
+    pro_id INTEGER UNIQUE,  -- id del producto
+    ubi_id INTEGER,         -- id de la ubicacion
+    
+    PRIMARY KEY (pro_id, ubi_id)
+    FOREIGN KEY (pro_id) REFERENCES PRODUCTO (pro_id),
+    FOREIGN KEY (ubi_id) REFERENCES UBICACION (ubi_id)
+    
+);
+
+-- TABLA TESTEADA CORRECTAMENTE
+DROP TABLE INVENTARIO;
+CREATE TABLE INVENTARIO(
+
+    pro_id INTEGER PRIMARY KEY,     -- Id del producto
+    inv_cantidad INTEGER,           -- cantidad de producto en el inventario
+    
+    FOREIGN KEY (pro_id) REFERENCES PRODUCTO(pro_id)
+);
+
+DROP TABLE COMPRA;
+CREATE TABLE COMPRA(
+
+    pro_id INTEGER,                         -- Id del producto
+    com_fecha DATE DEFAULT (DATE('now')),   -- Fecha de la compra
+    com_precio INTEGER,                     -- precio de compra en el momento no controlado por el usuario
+    com_cantidad INTEGER,                   -- cantidad comprada
+    
+    FOREIGN KEY (pro_id) REFERENCES PRODUCTO(pro_id)
+);
+
+DROP TABLE VENTA;
+CREATE TABLE VENTA(
+
+    pro_id INTEGER,                         -- Id del producto
+    ven_fecha DATE DEFAULT (DATE('now')),   -- Fecha de la venta
+    ven_precio INTEGER,                     -- Precio de venta en el momento no controlado por el usuario
+    ven_cantidad INTEGER,                   -- Cantidad vendida
+    
+    FOREIGN KEY (pro_id) REFERENCES PRODUCTO(pro_id)
+);
+
+
+-- Triggers
+
+-- ESTE TRIGGER FUNCIONA CORRECTAMETNE
+DROP TRIGGER AUMENTO_INVENTARIO;
+CREATE TRIGGER AUMENTO_INVENTARIO
+AFTER INSERT ON COMPRA
+FOR EACH ROW
+BEGIN
+    UPDATE INVENTARIO SET inv_cantidad = inv_cantidad + NEW.com_cantidad WHERE pro_id = NEW.pro_id;
+END;
+
+-- ESTE TRIGGER FUNCIONA CORRECTAMENTE
+DROP TRIGGER DISMINUCION_INVENTARIO;
+CREATE TRIGGER DISMINUCION_INVENTARIO
+BEFORE INSERT ON VENTA
+FOR EACH ROW
+BEGIN
+    -- Verificar si hay suficiente cantidad en el inventario para el producto de la nueva venta
+    SELECT CASE
+               WHEN (SELECT inv_cantidad FROM INVENTARIO WHERE pro_id = NEW.pro_id) < NEW.ven_cantidad THEN
+                   -- Si la cantidad en inventario es menor que la cantidad a vender, abortar la inserción
+                   RAISE(ABORT, 'No hay suficiente inventario disponible para este producto.')
+           END;
+
+    -- Si hay suficiente inventario, proceder a restar la cantidad vendida
+    UPDATE INVENTARIO
+    SET inv_cantidad = inv_cantidad - NEW.ven_cantidad
+    WHERE pro_id = NEW.pro_id;
+END;
+
+
+-- VISTAS
+DROP VIEW VW_PRODUCTO;
+CREATE VIEW VW_PRODUCTO AS SELECT 
+    pro_id, 
+    pro_nombre, 
+    pro_precio_compra, 
+    pro_precio_venta, 
+    inv_cantidad, 
+    ubi_nombre 
+    FROM PRODUCTO 
+        NATURAL JOIN INVENTARIO 
+        NATURAL JOIN PRODUCTO_HAS_UBICACION 
+        NATURAL JOIN UBICACION;
+
+
+DROP VIEW VW_COMPRA;
+CREATE VIEW VW_COMPRA AS SELECT
+    pro_id,
+    pro_nombre,
+    com_fecha,
+    com_precio,
+    com_cantidad 
+    FROM PRODUCTO 
+        NATURAL JOIN COMPRA;
+        
+DROP VIEW VW_VENTA;
+CREATE VIEW VW_VENTA AS SELECT
+    pro_id,
+    pro_nombre,
+    ven_fecha,
+    ven_precio,
+    ven_cantidad 
+    FROM PRODUCTO 
+        NATURAL JOIN VENTA;
+        
+DROP VIEW VW_INVENTARIO;
+CREATE VIEW VW_INVENTARIO AS SELECT
+    pro_id,
+    pro_nombre,
+    inv_cantidad
+    FROM INVENTARIO
+        NATURAL JOIN PRODUCTO;
+        
+
+
+-- TIPS
+
+--tip para consultas con fechas
+SELECT * FROM VENTA
+WHERE strftime('%d-%m-%Y', ven_fecha) = '21-06-2025';
+
+-- esta seria la forma correcta de hacer la insercion corresopndiente, tendria que ir internamente dentro del codigo a implementar
+-- Tambien es valida para las ventas
+INSERT INTO COMPRA (pro_id,com_precio, com_cantidad) VALUES (1,(SELECT pro_precio_compra FROM PRODUCTO WHERE pro_id = 1), 1);
