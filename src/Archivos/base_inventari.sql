@@ -43,22 +43,24 @@ CREATE TABLE INVENTARIO(
 
 DROP TABLE COMPRA;
 CREATE TABLE COMPRA(
-
-    pro_id INTEGER,                         -- Id del producto
-    com_fecha DATE DEFAULT (DATE('now')),   -- Fecha de la compra
-    com_precio INTEGER,                     -- precio de compra en el momento no controlado por el usuario
-    com_cantidad INTEGER,                   -- cantidad comprada
+    
+    com_id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,    -- id de la compra
+    pro_id INTEGER,                                     -- Id del producto
+    com_fecha DATE DEFAULT (DATE('now', '-5 hours')),   -- Fecha de la compra
+    com_precio INTEGER,                                 -- precio de compra en el momento no controlado por el usuario
+    com_cantidad INTEGER,                               -- cantidad comprada
     
     FOREIGN KEY (pro_id) REFERENCES PRODUCTO(pro_id)
 );
 
 DROP TABLE VENTA;
 CREATE TABLE VENTA(
-
-    pro_id INTEGER,                         -- Id del producto
-    ven_fecha DATE DEFAULT (DATE('now')),   -- Fecha de la venta
-    ven_precio INTEGER,                     -- Precio de venta en el momento no controlado por el usuario
-    ven_cantidad INTEGER,                   -- Cantidad vendida
+    
+    ven_id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,    -- Id de la venta
+    pro_id INTEGER,                                     -- Id del producto
+    ven_fecha DATE DEFAULT (DATE('now', '-5 hours')),   -- Fecha de la venta
+    ven_precio INTEGER,                                 -- Precio de venta en el momento no controlado por el usuario
+    ven_cantidad INTEGER,                               -- Cantidad vendida
     
     FOREIGN KEY (pro_id) REFERENCES PRODUCTO(pro_id)
 );
@@ -67,17 +69,33 @@ CREATE TABLE VENTA(
 -- Triggers
 
 -- ESTE TRIGGER FUNCIONA CORRECTAMETNE
-DROP TRIGGER AUMENTO_INVENTARIO;
-CREATE TRIGGER AUMENTO_INVENTARIO
+DROP TRIGGER TG_AUMENTO_INVENTARIO;
+CREATE TRIGGER TG_AUMENTO_INVENTARIO
 AFTER INSERT ON COMPRA
 FOR EACH ROW
 BEGIN
     UPDATE INVENTARIO SET inv_cantidad = inv_cantidad + NEW.com_cantidad WHERE pro_id = NEW.pro_id;
 END;
 
+DROP TRIGGER TG_DELTE_COMPRA;
+CREATE TRIGGER TG_DELTE_COMPRA
+AFTER DELETE ON COMPRA
+FOR EACH ROW
+BEGIN
+    UPDATE INVENTARIO SET inv_cantidad = inv_cantidad - OLD.com_cantidad WHERE pro_id = OLD.pro_id;
+END;
+
+DROP TRIGGER TG_DELETE_VENTA;
+CREATE TRIGGER TG_DELETE_VENTA
+AFTER DELETE ON VENTA
+FOR EACH ROW
+BEGIN
+    UPDATE INVENTARIO SET inv_cantidad = inv_cantidad + OLD.com_cantidad WHERE pro_id = OLD.pro_id;
+END;
+
 -- ESTE TRIGGER FUNCIONA CORRECTAMENTE
-DROP TRIGGER DISMINUCION_INVENTARIO;
-CREATE TRIGGER DISMINUCION_INVENTARIO
+DROP TRIGGER TG_DISMINUCION_INVENTARIO;
+CREATE TRIGGER TG_DISMINUCION_INVENTARIO
 BEFORE INSERT ON VENTA
 FOR EACH ROW
 BEGIN
@@ -112,6 +130,7 @@ CREATE VIEW VW_PRODUCTO AS SELECT
 
 DROP VIEW VW_COMPRA;
 CREATE VIEW VW_COMPRA AS SELECT
+    com_id,
     pro_id,
     pro_nombre,
     com_fecha,
@@ -122,6 +141,7 @@ CREATE VIEW VW_COMPRA AS SELECT
         
 DROP VIEW VW_VENTA;
 CREATE VIEW VW_VENTA AS SELECT
+    ven_id,
     pro_id,
     pro_nombre,
     ven_fecha,

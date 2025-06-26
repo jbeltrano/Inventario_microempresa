@@ -1,17 +1,16 @@
 package Base_datos;
 
 import java.io.IOException;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class Base_compra extends Conexion{
     
-    private static final String[] COLUMNAS = {"ID","PRODUCTO","FECHA","PRECIO C", "CANTIDAD"};
+    private static final String[] COLUMNAS = {"ID","ID P","PRODUCTO","FECHA","PRECIO C", "CANTIDAD"};
     private static final String INSERTAR = "INSERT INTO COMPRA (pro_id, com_precio, com_cantidad) VALUES (?,(SELECT pro_precio_compra FROM PRODUCTO WHERE pro_id = ?),?);";
-    private static final String ELIMINAR = "DELETE FROM COMPRA WHERE pro_id = ? AND com_fecha = ? AND com_cantidad = ?;";
-    private static final String CONSULTAR_MUCHOS = "SELECT * FROM VW_COMPRA WHERE pro_id = ? OR pro_nombre LIKE ? OR com_fecha LIKE ?;";
-    private static final String CANTIDAD_MUCHOS = "SELECT COUNT(*) FROM VW_COMPRA WHERE pro_id = ? OR pro_nombre LIKE ? OR com_fecha LIKE ?;";
-    private static final String CONSULTAR_UNO = "SELECT * FROM VW_COMPRA WHERE pro_id = ? AND com_fecha = ? AND com_cantidad = ?;";
+    private static final String ELIMINAR = "DELETE FROM COMPRA WHERE com_id = ?;";
+    private static final String CONSULTAR_MUCHOS = "SELECT * FROM VW_COMPRA WHERE com_id = ? OR pro_id = ? OR pro_nombre LIKE ? OR com_fecha LIKE ?;";
+    private static final String CANTIDAD_MUCHOS = "SELECT COUNT(*) FROM VW_COMPRA WHERE com_id = ? OR pro_id = ? OR pro_nombre LIKE ? OR com_fecha LIKE ?;";
+    private static final String CONSULTAR_UNO = "SELECT * FROM VW_COMPRA WHERE com_id = ?;";
     
     /**
      * Metodo constructor
@@ -60,15 +59,13 @@ public class Base_compra extends Conexion{
     }
 
     /**
-     * Este metodo se encarga de eliminar un registro de la 
-     * base de datos sobre la tabla comprar
-     * @param id es el id del producto
-     * @param fecha es la fecha en la que se hizo la compra
-     *              debe estar en formato "yyyy-mm-dd"
-     * @param cantidad es la cantidad de producto
+     * Este metodo se encarga de eliminar un registro
+     * de las compras
+     * @param id es el id o consecutivo
+     * de la compra que se realizo
      * @throws SQLException
      */
-    public void eliminar(long id, String fecha, long cantidad) throws SQLException{
+    public void eliminar(long id) throws SQLException{
 
         try{
 
@@ -77,8 +74,6 @@ public class Base_compra extends Conexion{
 
             // Establece los valores que se van a modificar en el String ELIMINAR
             pstate.setLong(1, id);
-            pstate.setString(2, fecha);
-            pstate.setLong(3, cantidad);
             
             // Ejecuta en la base de datos
             pstate.executeUpdate();
@@ -122,8 +117,9 @@ public class Base_compra extends Conexion{
 
             // Se modifican los parametros a utilizar en la consulta
             pstate.setString(1, id);
-            pstate.setString(2, parametro_aux);
+            pstate.setString(2, id);
             pstate.setString(3, parametro_aux);
+            pstate.setString(4, parametro_aux);
             
             // Se ejecuta la consulta
             result = pstate.executeQuery();
@@ -145,8 +141,9 @@ public class Base_compra extends Conexion{
 
             // Se modifican los parametros a utilizar en la consulta
             pstate.setString(1, id);
-            pstate.setString(2, parametro_aux);
+            pstate.setString(2, id);
             pstate.setString(3, parametro_aux);
+            pstate.setString(4, parametro_aux);
             
             // Se ejecuta la consulta
             result = pstate.executeQuery();
@@ -175,4 +172,47 @@ public class Base_compra extends Conexion{
         return datos;
     }
 
+    /**
+     * Este metodo se encarga de retornar un unico registro
+     * de la vista vw_compra, utilizando el id de la compra
+     * para identificar de manera unica el registro
+     * @param id es el id de la compra
+     * @return retorna un arreglo de tipo String[]
+     * con los datos en caso de ser encontrados
+     * en caso que no sea asi retorna el arreglo vacio
+     * @throws SQLException
+     */
+    public String[] consultar_uno(long id)throws SQLException{
+
+        String datos[] = new String[COLUMNAS.length];   // Reserva el espacio para los datos
+
+        try{
+
+            pstate = conexion.prepareStatement(CONSULTAR_UNO);  // Prepara la consulta de un unico registro
+
+            pstate.setLong(1, id);  // Modifica los datos necesarios para la consulta
+
+            result = pstate.executeQuery(); // Ejecuta la consulta y lo almacena en result
+
+            if(result.next()){  // Si hay datos ejecuta el for que se encarga de introducirlos en el arreglo
+
+                for(int j = 0; j < COLUMNAS.length; j++){
+                    datos[j] = result.getString(j+1);
+                }
+
+            }
+
+        }catch(SQLException ex){
+
+            throw ex;
+
+        }finally{
+
+            pstate.close();
+            result.close();
+
+        }
+
+        return datos;
+    }
 }
