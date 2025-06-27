@@ -138,16 +138,16 @@ END;
 -- VISTAS
 DROP VIEW VW_PRODUCTO;
 CREATE VIEW VW_PRODUCTO AS SELECT 
-    pro_id, 
-    pro_nombre, 
-    pro_precio_compra, 
-    pro_precio_venta, 
-    inv_cantidad, 
-    ubi_nombre 
-    FROM PRODUCTO 
-        NATURAL JOIN INVENTARIO 
-        NATURAL JOIN PRODUCTO_HAS_UBICACION 
-        NATURAL JOIN UBICACION;
+    p.pro_id, 
+    p.pro_nombre, 
+    p.pro_precio_compra, 
+    p.pro_precio_venta, 
+    i.inv_cantidad, 
+    u.ubi_nombre
+    FROM PRODUCTO p
+        LEFT JOIN INVENTARIO i ON p.pro_id = i.pro_id
+        LEFT JOIN PRODUCTO_HAS_UBICACION pu ON p.pro_id = pu.pro_id
+        LEFT JOIN UBICACION u ON pu.ubi_id = u.ubi_id;
 
 
 DROP VIEW VW_COMPRA;

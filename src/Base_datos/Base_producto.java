@@ -5,12 +5,12 @@ import java.sql.SQLException;
 
 public class Base_producto extends Conexion{
     
-    private static final String[] COLUMNAS = {"ID","PRODUCTO","PRECIO COMPRA","PRECIO VENTA", "UBICACION"};
+    private static final String[] COLUMNAS = {"ID","PRODUCTO","PRECIO COMPRA","PRECIO VENTA","DISPONIBLE", "UBICACION"};
     private static final String INSERTAR = "INSERT INTO PRODUCTO (pro_nombre, pro_precio_compra, pro_precio_venta) VALUES (?, ?, ?);";
     private static final String ELIMINAR = "DELETE FROM PRODUCTO WHERE pro_id = ?;";
     private static final String CONSULTAR_MUCHOS = "SELECT * FROM VW_PRODUCTO WHERE pro_id = ? OR pro_nombre LIKE ?;";
     private static final String CANTIDAD_MUCHOS = "SELECT COUNT(*) FROM VW_PRODUCTO WHERE pro_id = ? OR pro_nombre LIKE ?;";
-    private static final String CONSULTAR_UNO = "SELECT * FROM VW_COMPRA WHERE pro_id = ?;";
+    private static final String CONSULTAR_UNO = "SELECT * FROM VW_PRODUCTO WHERE pro_id = ?;";
 
     /**
      * Metodo contructor de la clase 

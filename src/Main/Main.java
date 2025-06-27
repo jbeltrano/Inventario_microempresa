@@ -28,7 +28,7 @@ public class Main {
             
             base = new Base_producto();
 
-            String[][] datos = base.consultar("asdf");
+            String[][] datos = base.consultar("");
 
             for(int i = 0; i < datos.length; i++){
                 for(int j = 0; j < datos[0].length; j++){
