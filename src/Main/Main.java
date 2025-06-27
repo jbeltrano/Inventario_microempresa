@@ -12,6 +12,7 @@
 import java.io.IOException;
 import java.sql.SQLException;
 import Base_datos.Base_compra;
+import Base_datos.Base_inventario;
 
 public class Main {
 
@@ -20,7 +21,33 @@ public class Main {
      */
     public static void main(String[] args){
         
-        System.out.println("insrte your code here...");
+        Base_inventario base = null;
+
+        try{
+            
+            base = new Base_inventario();
+
+            String[][] datos = base.consultar("asdfas");
+
+            for(int i = 0; i < datos.length; i++){
+                for(int j = 0; j < datos[0].length; j++){
+                    System.out.print(datos[i][j] + " | ");
+                }
+                System.out.println();
+            }
+            
+            String[] dato = base.consultar_uno(1);
+
+            for(int j = 0; j < dato.length; j++){
+                    System.out.print(dato[j] + " | ");
+            }
+
+        }catch(SQLException | IOException ex){
+            System.out.println(ex);
+        }finally{
+
+            base.close();
+        }
         
     }
     
