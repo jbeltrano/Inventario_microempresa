@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import Base_datos.Base_compra;
 import Base_datos.Base_inventario;
+import Base_datos.Base_producto;
 
 public class Main {
 
@@ -21,13 +22,13 @@ public class Main {
      */
     public static void main(String[] args){
         
-        Base_inventario base = null;
+        Base_producto base = null;
 
         try{
             
-            base = new Base_inventario();
+            base = new Base_producto();
 
-            String[][] datos = base.consultar("asdfas");
+            String[][] datos = base.consultar("asdf");
 
             for(int i = 0; i < datos.length; i++){
                 for(int j = 0; j < datos[0].length; j++){
@@ -36,6 +37,8 @@ public class Main {
                 System.out.println();
             }
             
+            System.out.println();
+
             String[] dato = base.consultar_uno(1);
 
             for(int j = 0; j < dato.length; j++){
