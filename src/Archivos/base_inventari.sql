@@ -150,6 +150,17 @@ CREATE VIEW VW_PRODUCTO AS SELECT
         LEFT JOIN UBICACION u ON pu.ubi_id = u.ubi_id;
 
 
+DROP VIEW VW_PHU;
+CREATE VIEW VW_PHU AS SELECT 
+    pro_id,
+    pro_nombre,
+    ubi_id,
+    ubi_nombre 
+    FROM PRODUCTO_HAS_UBICACION 
+        NATURAL JOIN PRODUCTO 
+        NATURAL JOIN UBICACION;
+
+
 DROP VIEW VW_COMPRA;
 CREATE VIEW VW_COMPRA AS SELECT
     com_id,

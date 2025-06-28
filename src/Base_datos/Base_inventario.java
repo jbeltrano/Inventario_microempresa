@@ -7,8 +7,8 @@ public class Base_inventario extends Conexion{
     
 
     private static final String[] COLUMNAS = {"ID P","PRODUCTO","CANTIDAD"};
-    private static final String CONSULTAR_MUCHOS = "SELECT * FROM VW_INVENTARIO WHERE pro_id = ? OR pro_nombre LIKE ?;";
-    private static final String CANTIDAD_MUCHOS = "SELECT COUNT(*) FROM VW_INVENTARIO WHERE pro_id = ? OR pro_nombre LIKE ?;";
+    private static final String CONSULTAR_MUCHOS = "SELECT * FROM VW_INVENTARIO WHERE pro_id LIKE ? OR pro_nombre LIKE ?;";
+    private static final String CANTIDAD_MUCHOS = "SELECT COUNT(*) FROM VW_INVENTARIO WHERE pro_id LIKE ? OR pro_nombre LIKE ?;";
     private static final String CONSULTAR_UNO = "SELECT * FROM VW_COMPRA WHERE pro_id = ?;";
 
 

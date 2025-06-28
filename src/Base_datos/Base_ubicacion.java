@@ -3,33 +3,37 @@ package Base_datos;
 import java.io.IOException;
 import java.sql.SQLException;
 
-public class Base_compra extends Conexion{
+public class Base_ubicacion extends Conexion{
     
-    private static final String[] COLUMNAS = {"ID","ID P","PRODUCTO","FECHA","PRECIO C", "CANTIDAD"};
-    private static final String INSERTAR = "INSERT INTO COMPRA (pro_id, com_precio, com_cantidad) VALUES (?,(SELECT pro_precio_compra FROM PRODUCTO WHERE pro_id = ?),?);";
-    private static final String ELIMINAR = "DELETE FROM COMPRA WHERE com_id = ?;";
-    private static final String CONSULTAR_MUCHOS = "SELECT * FROM VW_COMPRA WHERE com_id = ? OR pro_id LIKE ? OR pro_nombre LIKE ? OR com_fecha LIKE ?;";
-    private static final String CANTIDAD_MUCHOS = "SELECT COUNT(*) FROM VW_COMPRA WHERE com_id = ? OR pro_id LIKE ? OR pro_nombre LIKE ? OR com_fecha LIKE ?;";
-    private static final String CONSULTAR_UNO = "SELECT * FROM VW_COMPRA WHERE com_id = ?;";
-    
+    private static final String[] COLUMNAS = {"ID","UBICACION"};
+    private static final String INSERTAR = "INSERT INTO UBICACION (ubi_nombre) VALUES (?);";
+    private static final String ELIMINAR = "DELETE FROM UBICACION WHERE ubi_id = ?;";
+    private static final String CONSULTAR_MUCHOS = "SELECT * FROM UBICACION WHERE ubi_id LIKE ? OR ubi_nombre LIKE ?;";
+    private static final String CANTIDAD_MUCHOS = "SELECT COUNT(*) FROM UBICACION WHERE ubi_id LIKE ? OR ubi_nombre LIKE ?;";
+    private static final String CONSULTAR_UNO = "SELECT * FROM UBICACION WHERE ubi_id = ?;";
+    private static final String ACTUALIZAR = "UPDATE UBICACION SET ubi_nombre = ? WHERE ubi_id = ?;";
+
+
     /**
-     * Metodo constructor
+     * Metodo constructor de la clase Base_ubicacion
+     * establece la conexion con la base e datos
      * @throws IOException
      * @throws SQLException
      */
-    public Base_compra()throws IOException, SQLException{
+    public Base_ubicacion() throws IOException, SQLException{
+
         super();
+
     }
-    
 
     /**
-     * Este metodo se encarga de insertar un registro
-     * de compra en la base de datos
-     * @param id es el id del producto
-     * @param cantidad es la cantidad de producto comprada
+     * Este metodo inserta en la tabla ubicacion
+     * el el nombre de una ubicacion dentro del almacen
+     * @param ubicacion este es el nombre de alguna ubicacion
+     * en el sistema de organizacion dentro de la empresa a utilizar
      * @throws SQLException
      */
-    public void insertar(long id, long cantidad) throws SQLException{
+    public void insertar(String ubicacion) throws SQLException{
         
         try{
             
@@ -37,9 +41,7 @@ public class Base_compra extends Conexion{
             pstate = conexion.prepareStatement(INSERTAR);
 
             // Modifica los valores que se van a insertar en el String predefinido
-            pstate.setLong(1, id);
-            pstate.setLong(2, id);
-            pstate.setLong(3, cantidad);
+            pstate.setString(1, ubicacion);
 
             // Ejecuta la insercion
             pstate.executeUpdate();
@@ -55,14 +57,12 @@ public class Base_compra extends Conexion{
 
         }
 
-
     }
 
     /**
-     * Este metodo se encarga de eliminar un registro
-     * de las compras
-     * @param id es el id o consecutivo
-     * de la compra que se realizo
+     * Este metodo se encarga de eliminar un regsitro
+     * de la tabla ubicacion, utilizando el id que la identifica
+     * @param id este es el id de la ubicacion
      * @throws SQLException
      */
     public void eliminar(long id) throws SQLException{
@@ -91,14 +91,17 @@ public class Base_compra extends Conexion{
     }
 
     /**
-     * Este metodo se utiiza para consultar los datos de la
-     * vista vw_compra
-     * @param parametro este parametro se utiliza para filtrar
-     * en la tabla compra por el id del producto, la fecha en
-     * cualquier subcadena de la forma "yyyy-mm-dd" y por el
-     * nombre del producto
-     * @return retorna una matriz con los datos 
-     * y los encabezados de la vista vw_compra
+     * Realiza una consulta en la base de datos 
+     * utilizando el parametro dado, retornando
+     * una matriz con los datos y la cabecera de
+     * la tabla
+     * @param parametro Puede ser el id o una
+     * fraccion del nombre a consultar dentro
+     * de la base de datos
+     * @return retorna una matriz tipo String[][]
+     * con la cabecera y en caso de encontrar resultados
+     * retorna mas filas con datos, caso contrario
+     * simplemente retorna la cabecera de la tabla
      * @throws SQLException
      */
     public String[][] consultar(String parametro) throws SQLException{
@@ -117,9 +120,7 @@ public class Base_compra extends Conexion{
 
             // Se modifican los parametros a utilizar en la consulta
             pstate.setString(1, id);
-            pstate.setString(2, id);
-            pstate.setString(3, parametro_aux);
-            pstate.setString(4, parametro_aux);
+            pstate.setString(2, parametro_aux);
             
             // Se ejecuta la consulta
             result = pstate.executeQuery();
@@ -138,15 +139,13 @@ public class Base_compra extends Conexion{
             // Limpia los campos anteriores
             pstate.close();
             result.close();
-
-            // Se prepara la consulta
+        
+            // Se prepara la consulta real
             pstate = conexion.prepareStatement(CONSULTAR_MUCHOS);
 
             // Se modifican los parametros a utilizar en la consulta
             pstate.setString(1, id);
-            pstate.setString(2, id);
-            pstate.setString(3, parametro_aux);
-            pstate.setString(4, parametro_aux);
+            pstate.setString(2, parametro_aux);
             
             // Se ejecuta la consulta
             result = pstate.executeQuery();
@@ -176,13 +175,11 @@ public class Base_compra extends Conexion{
     }
 
     /**
-     * Este metodo se encarga de retornar un unico registro
-     * de la vista vw_compra, utilizando el id de la compra
-     * para identificar de manera unica el registro
-     * @param id es el id de la compra
-     * @return retorna un arreglo de tipo String[]
-     * con los datos en caso de ser encontrados
-     * en caso que no sea asi retorna el arreglo vacio
+     * Retorna un unico registro de la tabla ubicacion
+     * utilizando como identificador unico el id la ubicacion
+     * @param id Deberia ser el id excacto de la ubiacion a consultar
+     * @return Retorna un arreglo tipo String[] con los datos encontrados
+     * en caso de no encontrar nada, retorna null
      * @throws SQLException
      */
     public String[] consultar_uno(long id)throws SQLException{
@@ -217,5 +214,38 @@ public class Base_compra extends Conexion{
         }
 
         return datos;
+    }
+
+    /**
+     * Este metodo se utiliza para actualizar un registro
+     * en la base de datos, actualiando unicamente el nombre
+     * y utilizando el id, para identificar a cual registro actualizar
+     * @param id Deberia ser el id exacto de la ubiacion
+     * @param nombre Es el nuevo nombre a utilizar
+     * @throws SQLException
+     */
+    public void actualizar(long id, String nombre) throws SQLException{
+
+        try{
+            // Preparando la update a realizar
+            pstate = conexion.prepareStatement(ACTUALIZAR);
+
+            // Modificando por los datos pasados por el usuario
+            pstate.setString(1, nombre);
+            pstate.setLong(2, id);
+
+            // Ejecutando el update
+            pstate.executeUpdate();
+
+
+        }catch(SQLException ex){    // Por si llegan a haber errores
+
+            throw ex;
+
+        }finally{   // Limpia los objetos utilizados
+
+            pstate.close();
+            
+        }
     }
 }
