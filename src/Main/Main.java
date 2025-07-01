@@ -11,8 +11,8 @@
 
 import java.io.IOException;
 import java.sql.SQLException;
-import Base_datos.Base_compra;
-import Base_datos.Base_inventario;
+
+import Base_datos.Base_phu;
 import Base_datos.Base_producto;
 import Base_datos.Base_ubicacion;
 
@@ -25,6 +25,7 @@ public class Main {
         
         Base_producto base = null;
         Base_ubicacion base_ubi = null;
+        Base_phu base_phu = null;
 
         try{
             
@@ -64,6 +65,26 @@ public class Main {
             System.out.println();
 
             dato = base_ubi.consultar_uno(1);
+
+            for(int j = 0; j < dato.length; j++){
+                    System.out.print(dato[j] + " | ");
+            }
+            
+
+            base_phu = new Base_phu();
+
+            datos = base_phu.consultar("");
+
+            for(int i = 0; i < datos.length; i++){
+                for(int j = 0; j < datos[0].length; j++){
+                    System.out.print(datos[i][j] + " | ");
+                }
+                System.out.println();
+            }
+            
+            System.out.println();
+
+            dato = base_phu.consultar_uno(1);
 
             for(int j = 0; j < dato.length; j++){
                     System.out.print(dato[j] + " | ");

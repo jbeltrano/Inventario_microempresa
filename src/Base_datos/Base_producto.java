@@ -11,6 +11,7 @@ public class Base_producto extends Conexion{
     private static final String CONSULTAR_MUCHOS = "SELECT * FROM VW_PRODUCTO WHERE pro_id LIKE ? OR pro_nombre LIKE ?;";
     private static final String CANTIDAD_MUCHOS = "SELECT COUNT(*) FROM VW_PRODUCTO WHERE pro_id LIKE ? OR pro_nombre LIKE ?;";
     private static final String CONSULTAR_UNO = "SELECT * FROM VW_PRODUCTO WHERE pro_id = ?;";
+    private static final String ACTUALIZAR = "UPDATE PRODUCTO SET pro_precio_compra = ?, pro_precio_venta = ?, pro_nombre = ? WHERE pro_id = ?;";
 
     /**
      * Metodo contructor de la clase 
@@ -22,6 +23,49 @@ public class Base_producto extends Conexion{
 
         super();
 
+    }
+
+    /**
+     * Este metodo se utiliza para actualizar un registro
+     * tipo producto en la base de datos.
+     * @param id Deberia ser el id del productoa actualizar
+     * @param precio_compra Si cambia deberia ser el
+     * nuevo precio de compra del producto
+     * @param precio_venta Si cambia deberia ser el
+     * nuevo precio de venta del producto
+     * @param nombre Si cambia, deberia ser el nuevo
+     * nombre asignado al producto
+     * @throws SQLException
+     */
+    public void actualizar( long id, 
+                            long precio_compra, 
+                            long precio_venta, 
+                            String nombre) 
+                            throws SQLException{
+
+        try{
+            // Preparando la update a realizar
+            pstate = conexion.prepareStatement(ACTUALIZAR);
+
+            // Modificando por los datos pasados por el usuario
+            pstate.setLong(1, precio_compra);
+            pstate.setLong(2, precio_venta);
+            pstate.setString(3, nombre);
+            pstate.setLong(4, id);
+
+            // Ejecutando el update
+            pstate.executeUpdate();
+
+
+        }catch(SQLException ex){    // Por si llegan a haber errores
+
+            throw ex;
+
+        }finally{   // Limpia los objetos utilizados
+
+            pstate.close();
+            
+        }
     }
 
 
