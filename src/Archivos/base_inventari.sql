@@ -5,7 +5,8 @@ CREATE TABLE PRODUCTO(
     pro_id INTEGER PRIMARY KEY AUTOINCREMENT,   -- Id del producto
     pro_nombre TEXT,                            -- Nombre del producto
     pro_precio_compra INTEGER,                  -- Precio en el que se compra el producto
-    pro_precio_venta INTENGER                   -- Precio en el que se piensa vender
+    pro_precio_venta INTENGER,                  -- Precio en el que se piensa vender
+    pro_nota TEXT                               -- Nota relacionada al producto
 
 );
 

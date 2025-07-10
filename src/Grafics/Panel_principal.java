@@ -26,6 +26,7 @@ public class Panel_principal extends JPanel{
     private ImageIcon imagen_compras;       // la imagen para el boton compras
     private ImageIcon imagen_ventas;        // La imagen para el boton ventas
     private JPanel panel_menu;              // El panel a utilizar para el menu
+    private JPanel panel_central;           // El panel central, es donde va a ir la tabla
     private JButton boton_menu;             // Boton para desplegar el menu
     private JButton boton_inventario;       // Boton para desplegar el inventario
     private JButton boton_compras;          // Boton para desplegar las compras
@@ -59,7 +60,7 @@ public class Panel_principal extends JPanel{
         config_boton_inventario();
         config_boton_compras();
         config_boton_ventas();
-
+        
         label_menu = new JLabel("Menu");
         config_label(label_menu, boton_menu);
 
@@ -83,7 +84,13 @@ public class Panel_principal extends JPanel{
         panel_menu.add(label_ventas);
 
 
+        /*
+         * Establece la configuracion para el panel
+         * de adicionar elementos
+         */
+        panel_central = new Panel_inventario();
         add(panel_menu,BorderLayout.WEST);
+        add(panel_central,BorderLayout.CENTER);
 
     }
 
@@ -145,9 +152,13 @@ public class Panel_principal extends JPanel{
         config_boton(boton_inventario, imagen_inventario);  // Configura el boton de forma general
 
         boton_inventario.addActionListener(_->{   // La accion que realizara el boton menu
-
             
-
+            remove(panel_central);
+            panel_central = new Panel_inventario();
+            add(panel_central,BorderLayout.CENTER);
+            panel_central.revalidate();
+            panel_central.repaint();
+            
         });
         
         boton_inventario.setBounds(   // Establece la posicion absoluta del boton
@@ -171,7 +182,12 @@ public class Panel_principal extends JPanel{
 
         boton_compras.addActionListener(_->{   // La accion que realizara el boton menu
 
-            
+            remove(panel_central);
+            //panel_central = new Panel_inventario();
+            panel_central = new JPanel();
+            add(panel_central,BorderLayout.CENTER);
+            panel_central.revalidate();
+            panel_central.repaint();
 
         });
         
@@ -196,7 +212,12 @@ public class Panel_principal extends JPanel{
 
         boton_ventas.addActionListener(_->{   // La accion que realizara el boton menu
 
-            
+            remove(panel_central);
+            //panel_central = new Panel_inventario();
+            panel_central = new JPanel();
+            add(panel_central,BorderLayout.CENTER);
+            panel_central.revalidate();
+            panel_central.repaint();
 
         });
         
@@ -216,7 +237,7 @@ public class Panel_principal extends JPanel{
      * @param imagen Debe ser la imagen del boton
      * tipo ImageIcon
      */
-    private static void config_boton(JButton boton, ImageIcon imagen){
+    public static void config_boton(JButton boton, ImageIcon imagen){
 
         boton.setBackground(Color.black);       // Cambia el color del fondo del boton
         boton.setBorderPainted(false);      // Hace que el borden no se vea

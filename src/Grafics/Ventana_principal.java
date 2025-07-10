@@ -2,6 +2,8 @@ package Grafics;
 
 import javax.swing.JFrame;
 
+import com.formdev.flatlaf.FlatLightLaf;
+
 import java.awt.Dimension;
 
 public class Ventana_principal extends JFrame{
@@ -14,7 +16,7 @@ public class Ventana_principal extends JFrame{
     public Ventana_principal(){
         
         super("Inventario");    // Se pasa a la superclase el titulo de la ventana
-
+        FlatLightLaf.setup();
         setPreferredSize(new Dimension(1200,700));  // Se define el tamaño por defecto de la ventana
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Se define la operacion por defecto al oprimir el boton x
         iniciar_componentes();                          // Inicia los componentes necesrios para la ventana
