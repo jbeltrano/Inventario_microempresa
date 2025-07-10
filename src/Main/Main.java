@@ -1,5 +1,4 @@
-
-
+import Grafics.Ventana_principal;
 
 public class Main {
 
@@ -8,7 +7,7 @@ public class Main {
      */
     public static void main(String[] args){
         
-        System.out.println("hola mundo");
+        Ventana_principal ventanda = new Ventana_principal();
         
     }
     
