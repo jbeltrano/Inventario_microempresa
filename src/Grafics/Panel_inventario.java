@@ -1,10 +1,14 @@
 package Grafics;
 
 import java.sql.SQLException;
+
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.SwingUtilities;
 import Base_datos.Base_producto;
+import Grafics.Dialogos.Actualizar_producto;
+import Grafics.Dialogos.Adicinar_producto;
 import Grafics.Utilidades.Modelo_tabla;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
@@ -46,7 +50,6 @@ public class Panel_inventario extends Panel_central{
 
     @Override
     protected void accion_text_bucar() {
-        
         try{
             base_producto = new Base_producto();
             // Obtiene los datos y crea una tabla auxiliar con los datos proporcionados por el text Field
@@ -69,11 +72,23 @@ public class Panel_inventario extends Panel_central{
     protected void config_listener_pop_menu() {
         
         item_modificar.addActionListener(_ ->{
-            // int select_row = tabla.getSelectedRow();
 
-            // new Actualizar_vehiculos((JFrame)this.get_window(), url, (String)tabla.getValueAt(select_row, 0));
+            int select_row = tabla.getSelectedRow();
+            Actualizar_producto actualizar = new Actualizar_producto(
+                    (JFrame) SwingUtilities.getWindowAncestor(this),
+                    () -> accion_text_bucar(), 
+                    Long.parseLong((String) tabla.getValueAt(select_row, 0)));
+            
+            actualizar.addWindowListener(new java.awt.event.WindowAdapter() {
+                @Override
+                public void windowClosed(java.awt.event.WindowEvent e) {
+                    // Se ejecuta cuando el diálogo se cierra
+                    accion_text_bucar();
+                }
+            });
 
-            // accion_text_busqueda();
+            actualizar.setVisible(true);
+
         });
         item_eliminar.addActionListener(_ ->{
 
@@ -104,6 +119,18 @@ public class Panel_inventario extends Panel_central{
     @Override
     protected void accion_adicionar() {
         
+        Adicinar_producto producto = new Adicinar_producto((JFrame) SwingUtilities.getWindowAncestor(this), () -> accion_text_bucar());
+
+        producto.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosed(java.awt.event.WindowEvent e) {
+                // Se ejecuta cuando el diálogo se cierra
+                accion_text_bucar();
+            }
+        });
+
+        producto.setVisible(true);
+
     }
     
 }

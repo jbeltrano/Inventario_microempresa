@@ -1,16 +1,4 @@
 -- TABLA TESTEADA CORRECTAMENTE
-DROP TABLE PRODUCTO;
-CREATE TABLE PRODUCTO(
-    
-    pro_id INTEGER PRIMARY KEY AUTOINCREMENT,   -- Id del producto
-    pro_nombre TEXT,                            -- Nombre del producto
-    pro_precio_compra INTEGER,                  -- Precio en el que se compra el producto
-    pro_precio_venta INTENGER,                  -- Precio en el que se piensa vender
-    pro_nota TEXT                               -- Nota relacionada al producto
-
-);
-
--- TABLA TESTEADA CORRECTAMENTE
 DROP TABLE UBICACION;
 CREATE TABLE UBICACION(
 
@@ -19,18 +7,22 @@ CREATE TABLE UBICACION(
         
 );
 
--- TABLA TESTEADA CORRECTAMENTE
-DROP TABLE PRODUCTO_HAS_UBICACION;
-CREATE TABLE PRODUCTO_HAS_UBICACION(
 
-    pro_id INTEGER UNIQUE,  -- id del producto
-    ubi_id INTEGER,         -- id de la ubicacion
+-- TABLA TESTEADA CORRECTAMENTE
+DROP TABLE PRODUCTO;
+CREATE TABLE PRODUCTO(
     
-    PRIMARY KEY (pro_id, ubi_id)
-    FOREIGN KEY (pro_id) REFERENCES PRODUCTO (pro_id),
-    FOREIGN KEY (ubi_id) REFERENCES UBICACION (ubi_id)
-    
+    pro_id INTEGER PRIMARY KEY AUTOINCREMENT,   -- Id del producto
+    pro_nombre TEXT,                            -- Nombre del producto
+    pro_precio_compra INTEGER,                  -- Precio en el que se compra el producto
+    pro_precio_venta INTENGER,                  -- Precio en el que se piensa vender
+    ubi_id INTEGER,                             -- Id de la ubiacion del producto
+    pro_nota TEXT,                              -- Nota relacionada al producto
+
+    FOREIGN KEY(ubi_id) REFERENCES UBICACION(ubi_id)
+
 );
+
 
 -- TABLA TESTEADA CORRECTAMENTE
 DROP TABLE INVENTARIO;
@@ -41,6 +33,7 @@ CREATE TABLE INVENTARIO(
     
     FOREIGN KEY (pro_id) REFERENCES PRODUCTO(pro_id)
 );
+
 
 DROP TABLE COMPRA;
 CREATE TABLE COMPRA(
@@ -144,22 +137,11 @@ CREATE VIEW VW_PRODUCTO AS SELECT
     p.pro_precio_compra, 
     p.pro_precio_venta, 
     i.inv_cantidad, 
-    u.ubi_nombre
+    u.ubi_nombre,
+    p.pro_nota
     FROM PRODUCTO p
         LEFT JOIN INVENTARIO i ON p.pro_id = i.pro_id
-        LEFT JOIN PRODUCTO_HAS_UBICACION pu ON p.pro_id = pu.pro_id
-        LEFT JOIN UBICACION u ON pu.ubi_id = u.ubi_id;
-
-
-DROP VIEW VW_PHU;
-CREATE VIEW VW_PHU AS SELECT 
-    pro_id,
-    pro_nombre,
-    ubi_id,
-    ubi_nombre 
-    FROM PRODUCTO_HAS_UBICACION 
-        NATURAL JOIN PRODUCTO 
-        NATURAL JOIN UBICACION;
+        LEFT JOIN UBICACION u ON p.ubi_id = u.ubi_id;
 
 
 DROP VIEW VW_COMPRA;
