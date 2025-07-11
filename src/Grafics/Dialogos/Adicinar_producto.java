@@ -12,7 +12,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.sql.SQLException;
-import Grafics.Utilidades.Producto_callback;
+import Grafics.Utilidades.Generic_callback;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -25,12 +25,10 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-import javax.swing.text.AbstractDocument;
-import javax.swing.text.AttributeSet;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.DocumentFilter;
 import Base_datos.Base_producto;
 import Base_datos.Base_ubicacion;
+import static Grafics.Utilidades.Filtros_text.aplicarFiltroEnteros;
+import static Grafics.Utilidades.Filtros_text.aplicarFiltroDecimales;
 
 public class Adicinar_producto extends JDialog{
     
@@ -48,14 +46,14 @@ public class Adicinar_producto extends JDialog{
     protected JComboBox<String> ubicacionComboBox;
     protected JTextArea area_text_notas;
     private JButton addButton;
-    private Producto_callback callback;
+    private Generic_callback callback;
     private JPanel panel;
     private JPanel buttonPanel;
     private JScrollPane scrollPane;
     protected JLabel titleLabel;
 
 
-    public Adicinar_producto(JFrame padre, Producto_callback callback){
+    public Adicinar_producto(JFrame padre, Generic_callback callback){
 
         super(padre);
         this.callback = callback;
@@ -198,6 +196,7 @@ public class Adicinar_producto extends JDialog{
         addButton.setForeground(Color.WHITE);
         addButton.setFocusPainted(false);
         addButton.setBorder(BorderFactory.createRaisedBevelBorder());
+        addButton.setToolTipText("Ingresar producto");
     }
 
     
@@ -216,7 +215,7 @@ public class Adicinar_producto extends JDialog{
         return true;
     }
 
-    private void setupEventListeners() {
+    protected void setupEventListeners() {
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -245,12 +244,12 @@ public class Adicinar_producto extends JDialog{
                     limpiarCampos();
 
                     if (callback != null){
-                        callback.producto_guardado();
+                        callback.callback();
                     }
                 }else{
 
                     JOptionPane.showMessageDialog(Adicinar_producto.this, "Los campos con * son obligatorios", "Producto Procesado", JOptionPane.INFORMATION_MESSAGE);
-
+                    
                 }
                 
             }
@@ -294,58 +293,6 @@ public class Adicinar_producto extends JDialog{
         }
     }
 
-
-    private void aplicarFiltroEnteros(JTextField textField) {
-        ((AbstractDocument) textField.getDocument()).setDocumentFilter(new DocumentFilter() {
-            @Override
-            public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr) throws BadLocationException {
-                if (string.matches("\\d*")) { // Solo dígitos
-                    super.insertString(fb, offset, string, attr);
-                }
-            }
-            
-            @Override
-            public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
-                if (text.matches("\\d*")) { // Solo dígitos
-                    super.replace(fb, offset, length, text, attrs);
-                }
-            }
-        });
-    }
-    
-    private void aplicarFiltroDecimales(JTextField textField) {
-        ((AbstractDocument) textField.getDocument()).setDocumentFilter(new DocumentFilter() {
-            @Override
-            public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr) throws BadLocationException {
-                String currentText = fb.getDocument().getText(0, fb.getDocument().getLength());
-                String newText = currentText.substring(0, offset) + string + currentText.substring(offset);
-                
-                if (esDecimalValido(newText)) {
-                    super.insertString(fb, offset, string, attr);
-                }
-            }
-            
-            @Override
-            public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
-                String currentText = fb.getDocument().getText(0, fb.getDocument().getLength());
-                String newText = currentText.substring(0, offset) + text + currentText.substring(offset + length);
-                
-                if (esDecimalValido(newText)) {
-                    super.replace(fb, offset, length, text, attrs);
-                }
-            }
-            
-            private boolean esDecimalValido(String text) {
-                if (text.isEmpty()) return true;
-                
-                // Permitir solo un punto decimal
-                if (text.matches("^\\d*\\.?\\d{0,2}$")) {
-                    return true;
-                }
-                return false;
-            }
-        });
-    }
 
     
     private void limpiarCampos() {

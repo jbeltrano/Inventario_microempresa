@@ -77,6 +77,14 @@ CREATE TRIGGER TG_DELTE_COMPRA
 AFTER DELETE ON COMPRA
 FOR EACH ROW
 BEGIN
+
+    -- Verificar si hay suficiente cantidad en el inventario para el producto de la nueva venta
+    SELECT CASE
+               WHEN (SELECT inv_cantidad FROM INVENTARIO WHERE pro_id = OLD.pro_id) < OLD.com_cantidad THEN
+                   -- Si la cantidad en inventario es menor que la cantidad a vender, abortar la inserción
+                   RAISE(ABORT, 'No es posible elminar esta compra, por que el inventario quedaria negativo.')
+           END;
+
     UPDATE INVENTARIO SET inv_cantidad = inv_cantidad - OLD.com_cantidad WHERE pro_id = OLD.pro_id;
 END;
 

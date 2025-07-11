@@ -5,7 +5,7 @@ import java.sql.SQLException;
 
 public class Base_compra extends Conexion{
     
-    private static final String[] COLUMNAS = {"ID","ID P","PRODUCTO","FECHA","PRECIO C", "CANTIDAD"};
+    private static final String[] COLUMNAS = {"ID","ID PRODUCTO","PRODUCTO","FECHA","PRECIO", "CANTIDAD"};
     private static final String INSERTAR = "INSERT INTO COMPRA (pro_id, com_precio, com_cantidad) VALUES (?,(SELECT pro_precio_compra FROM PRODUCTO WHERE pro_id = ?),?);";
     private static final String ELIMINAR = "DELETE FROM COMPRA WHERE com_id = ?;";
     private static final String CONSULTAR_MUCHOS = "SELECT * FROM VW_COMPRA WHERE com_id = ? OR pro_id LIKE ? OR pro_nombre LIKE ? OR com_fecha LIKE ?;";

@@ -183,8 +183,9 @@ public class Panel_principal extends JPanel{
         boton_compras.addActionListener(_->{   // La accion que realizara el boton menu
 
             remove(panel_central);
-            //panel_central = new Panel_inventario();
-            panel_central = new JPanel();
+          
+            panel_central = new Panel_compras();
+            
             add(panel_central,BorderLayout.CENTER);
             panel_central.revalidate();
             panel_central.repaint();

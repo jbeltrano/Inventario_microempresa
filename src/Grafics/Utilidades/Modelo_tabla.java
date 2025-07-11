@@ -77,11 +77,44 @@ public class Modelo_tabla {
         // Configuarcion del tamaño de las columnas, para que tengan un tamaño por defecto
         clum_model = tab.getColumnModel();
         clum_model.getColumn(0).setPreferredWidth(40);
-        clum_model.getColumn(1).setPreferredWidth(200);
+        clum_model.getColumn(1).setPreferredWidth(250);
         clum_model.getColumn(2).setPreferredWidth(100);
         clum_model.getColumn(3).setPreferredWidth(100);
-        clum_model.getColumn(4).setPreferredWidth(40);
+        clum_model.getColumn(4).setPreferredWidth(80);
         clum_model.getColumn(5).setPreferredWidth(200);
+        clum_model.getColumn(6).setPreferredWidth(350);
+        
+
+        return tab;
+
+    }
+
+
+    public static JTable set_tabla_compras(String[][] datos){ 
+        JTable tab;                     // Variable para la tabla
+        DefaultTableModel modelo;       // Variable para el modelo de la tabla
+        TableColumnModel clum_model;    // Variable para el modelo de la comlumna de la tabla
+        
+        modelo = set_modelo_tablas(datos);  // Genera el modelo por defecto para nuestra tabla
+
+        tab = new JTable(modelo);    // Se crea una nueva instancia de un JTable con el modelo
+
+        tab.setShowGrid(true);      // Se encarga de mostrar las lineas de la tabla
+        tab.setGridColor(Color.lightGray);  // Se en caega de modificar el color de las lineas de la tabla
+        tab.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);  // Hace que la tabla no se renderice al tamaño por defecto
+        tab.getTableHeader().setReorderingAllowed(false);   // Evita que se puedan reordenar las columnas
+        tab.setCellSelectionEnabled(true);  // Hace que se puedan seleccionar las celdas
+        add_mouse_listener(tab);    // Hace que solo se pueda seleccionar con el mouse derecho una unica celda
+        
+        
+        // Configuarcion del tamaño de las columnas, para que tengan un tamaño por defecto
+        clum_model = tab.getColumnModel();
+        clum_model.getColumn(0).setPreferredWidth(40);
+        clum_model.getColumn(1).setPreferredWidth(80);
+        clum_model.getColumn(2).setPreferredWidth(250);
+        clum_model.getColumn(3).setPreferredWidth(150);
+        clum_model.getColumn(4).setPreferredWidth(150);
+        clum_model.getColumn(5).setPreferredWidth(100);
         
 
         return tab;
