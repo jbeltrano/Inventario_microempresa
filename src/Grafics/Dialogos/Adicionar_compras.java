@@ -58,16 +58,22 @@ public class Adicionar_compras extends JDialog {
     private JLabel label_producto;
     private JLabel label_buscar_producto;
     private JLabel label_cantidad;
-    private JButton boton_guardar;
+    protected JButton boton_guardar;
     private JPopupMenu popupSugerencias;
     private List<Producto> productos;
-    private Producto productoSeleccionado;
+    protected Producto productoSeleccionado;
     private JPanel panelPrincipal;
     private Generic_callback callback;
+    protected String mensaje;
+    protected long cantidad;
+    protected double total;
+    protected String titulo;
+    protected boolean bandera;
     
     public Adicionar_compras(JFrame padre, Generic_callback callback) {
         super(padre);
         this.callback = callback;
+        titulo = "Formulario de Compra";
         setLayout(new BorderLayout());
         inicializarComponentes();
         configurarVentana();
@@ -134,7 +140,7 @@ public class Adicionar_compras extends JDialog {
         boton_guardar = new JButton("Agregar Compra");
         boton_guardar.setFont(new Font("Arial", Font.BOLD, 12));
         boton_guardar.setBackground(Color.LIGHT_GRAY);
-        boton_guardar.addActionListener(e -> procesarCompra());
+        boton_guardar.addActionListener(_ -> procesarCompra());
         panelPrincipal.add(boton_guardar, gbc);
         
         
@@ -203,7 +209,7 @@ public class Adicionar_compras extends JDialog {
                 for (int i = 0; i < maxSugerencias; i++) {
                     Producto producto = productos.get(i);
                     JMenuItem item = new JMenuItem(producto.toString());
-                    item.addActionListener(e -> seleccionarProducto(producto));
+                    item.addActionListener(_ -> seleccionarProducto(producto));
                     
                     // Agregar efecto hover
                     item.addMouseListener(new MouseAdapter() {
@@ -281,7 +287,7 @@ public class Adicionar_compras extends JDialog {
         }
         
         try {
-            int cantidad = Integer.parseInt(cantidadTexto);
+            cantidad = Integer.parseInt(cantidadTexto);
             if (cantidad <= 0) {
                 JOptionPane.showMessageDialog(this, 
                     "La cantidad debe ser un número positivo.", 
@@ -290,11 +296,39 @@ public class Adicionar_compras extends JDialog {
             }
             
             // Aquí llamarías a tu método para insertar en la BD
-            insertarCompraEnBD(productoSeleccionado.getId(), cantidad);
             
-            // Mostrar confirmación
-            double total = productoSeleccionado.getPrecio() * cantidad;
-            String mensaje = String.format(
+            if(insertarCompraEnBD(productoSeleccionado.getId(), cantidad)){
+
+                // Mostrar confirmación
+                total = productoSeleccionado.getPrecio() * cantidad;
+                mensaje = personalizar_mensjae();
+                
+                JOptionPane.showMessageDialog(this, mensaje, 
+                    "Compra Registrada", JOptionPane.INFORMATION_MESSAGE);
+                
+                // Limpiar formulario
+                limpiarFormulario();
+                
+                if(callback != null){
+                    callback.callback();
+                }
+
+            }else{
+                text_cantidad.requestFocus();
+            }
+            
+            
+
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, 
+                "La cantidad debe ser un número válido.", 
+                "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    protected String personalizar_mensjae(){
+
+        return String.format(
                 "Compra registrada exitosamente:\n\n" +
                 "Producto: %s\n" +
                 "ID: %d\n" +
@@ -307,25 +341,10 @@ public class Adicionar_compras extends JDialog {
                 productoSeleccionado.getPrecio(),
                 total
             );
-            
-            JOptionPane.showMessageDialog(this, mensaje, 
-                "Compra Registrada", JOptionPane.INFORMATION_MESSAGE);
-            
-            // Limpiar formulario
-            limpiarFormulario();
-            
-            if(callback != null){
-                callback.callback();
-            }
 
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, 
-                "La cantidad debe ser un número válido.", 
-                "Error", JOptionPane.ERROR_MESSAGE);
-        }
     }
-    
-    private void insertarCompraEnBD(long idProducto, long cantidad) {
+
+    protected boolean insertarCompraEnBD(long idProducto, long cantidad) {
         // Aquí implementarías la inserción en tu base de datos
         
         Base_compra compra = null;
@@ -336,21 +355,15 @@ public class Adicionar_compras extends JDialog {
 
         }catch(SQLException | IOException ex){
             JOptionPane.showMessageDialog(Adicionar_compras.this, ex, getTitle(), JOptionPane.ERROR_MESSAGE);
+            return false;
+            
         }finally{
-            compra.close();
+            if(compra != null){
+                compra.close();
+            }
         }
-        // Ejemplo de lo que harías:
-        /*
-        try {
-            String sql = "INSERT INTO compras (id_producto, cantidad, fecha) VALUES (?, ?, NOW())";
-            PreparedStatement stmt = connection.prepareStatement(sql);
-            stmt.setLong(1, idProducto);
-            stmt.setLong(2, cantidad);
-            stmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        */
+
+        return true;
     }
     
     private void limpiarFormulario() {
@@ -363,7 +376,7 @@ public class Adicionar_compras extends JDialog {
     }
     
     private void configurarVentana() {
-        setTitle("Formulario de Compra");
+        setTitle(titulo);
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         setSize(500, 300);
         setLocationRelativeTo(null);

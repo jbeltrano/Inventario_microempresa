@@ -25,16 +25,19 @@ public class Panel_principal extends JPanel{
     private ImageIcon imagen_inventario;    // la imagen para el boton inventario
     private ImageIcon imagen_compras;       // la imagen para el boton compras
     private ImageIcon imagen_ventas;        // La imagen para el boton ventas
+    private ImageIcon imagen_ubicacion;     // La imagen apra el boton ubicacion
     private JPanel panel_menu;              // El panel a utilizar para el menu
     private JPanel panel_central;           // El panel central, es donde va a ir la tabla
     private JButton boton_menu;             // Boton para desplegar el menu
     private JButton boton_inventario;       // Boton para desplegar el inventario
     private JButton boton_compras;          // Boton para desplegar las compras
     private JButton boton_ventas;           // Boton para desplegar las ventas
+    private JButton boton_ubicacion;        // Boton para desplegar la ubicacion
     private JLabel label_menu;              // Label para el boton menu
     private JLabel label_inventario;        // Label para el boton inventario
     private JLabel label_comrpas;           // Label para el boton comrpas
     private JLabel label_ventas;            // Label para el boton ventas
+    private JLabel label_ubicacion;         // Label para el boton ubicacion
 
     public Panel_principal(){
 
@@ -60,6 +63,7 @@ public class Panel_principal extends JPanel{
         config_boton_inventario();
         config_boton_compras();
         config_boton_ventas();
+        config_boton_ubicacion();
         
         label_menu = new JLabel("Menu");
         config_label(label_menu, boton_menu);
@@ -73,15 +77,20 @@ public class Panel_principal extends JPanel{
         label_ventas = new JLabel("Ventas");
         config_label(label_ventas, boton_ventas);
 
+        label_ubicacion = new JLabel("Ubicacion");
+        config_label(label_ubicacion, boton_ubicacion); 
+
         panel_menu.add(boton_menu);
         panel_menu.add(boton_inventario);
         panel_menu.add(boton_compras);
         panel_menu.add(boton_ventas);
+        panel_menu.add(boton_ubicacion);
 
         panel_menu.add(label_menu);
         panel_menu.add(label_inventario);
         panel_menu.add(label_comrpas);
         panel_menu.add(label_ventas);
+        panel_menu.add(label_ubicacion);
 
 
         /*
@@ -169,6 +178,33 @@ public class Panel_principal extends JPanel{
 
     }
 
+    private void config_boton_ubicacion(){
+
+        boton_ubicacion = new JButton(); // Crea el boton
+
+        config_boton(boton_ubicacion, imagen_ubicacion);  // Configura el boton de forma general
+
+        boton_ubicacion.addActionListener(_->{   // La accion que realizara el boton menu
+            
+            remove(panel_central);
+            
+            panel_central = new Panel_ubicacion();
+            
+            add(panel_central,BorderLayout.CENTER);
+            panel_central.revalidate();
+            panel_central.repaint();
+            
+        });
+        
+        boton_ubicacion.setBounds(   // Establece la posicion absoluta del boton
+            0,          // Establece la posicion en x
+            boton_ventas.getY() + boton_ventas.getHeight() +5,          // Establece la posicion en y
+            ANCHO_BOTON,     // Establece el ancho
+            ALTO_BOTON);    // Establece el alto
+
+    }
+
+
     /**
      * Este metodo se encarga de configurar
      * por completo el boton compras
@@ -214,8 +250,8 @@ public class Panel_principal extends JPanel{
         boton_ventas.addActionListener(_->{   // La accion que realizara el boton menu
 
             remove(panel_central);
-            //panel_central = new Panel_inventario();
-            panel_central = new JPanel();
+            
+            panel_central = new Panel_ventas();
             add(panel_central,BorderLayout.CENTER);
             panel_central.revalidate();
             panel_central.repaint();
@@ -300,9 +336,12 @@ public class Panel_principal extends JPanel{
      * correspondientes apra su uso en los botones
      */
     private void cargar_imagenes(){
-        imagen_menu = new ImageIcon("src\\Grafics\\Recursos\\menu.png");
-        imagen_inventario = new ImageIcon("src\\Grafics\\Recursos\\imagen_inventario.png");
-        imagen_compras = new ImageIcon("src\\Grafics\\Recursos\\imagen_canasta.png");
-        imagen_ventas = new ImageIcon("src\\Grafics\\Recursos\\imagen_ventas.png");
+
+        imagen_menu = new ImageIcon(getClass().getResource("/Grafics/Recursos/menu.png"));
+        imagen_inventario = new ImageIcon(getClass().getResource("/Grafics/Recursos/imagen_inventario.png"));
+        imagen_compras = new ImageIcon(getClass().getResource("/Grafics/Recursos/imagen_canasta.png"));
+        imagen_ventas = new ImageIcon(getClass().getResource("/Grafics/Recursos/imagen_ventas.png"));
+        imagen_ubicacion = new ImageIcon(getClass().getResource("/Grafics/Recursos/imagen_ubicacion.png"));
+
     }
 }

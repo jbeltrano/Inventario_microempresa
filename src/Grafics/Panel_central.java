@@ -43,7 +43,7 @@ public abstract class Panel_central extends JPanel{
         super();    // Llama la super clase de JPanel
 
         this.window = SwingUtilities.getWindowAncestor(this);
-        imagen_adicionar = new ImageIcon("src\\Grafics\\Recursos\\imagen_adicionar.png");
+        imagen_adicionar = new ImageIcon(getClass().getResource("/Grafics/Recursos/imagen_adicionar.png"));
 
         setLayout(new BorderLayout());  // Establece el Layout a utilizar
         scroll = new JScrollPane();     // Inicializa el scroll que se va a utilizar

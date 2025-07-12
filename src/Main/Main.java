@@ -7,7 +7,7 @@ public class Main {
      */
     public static void main(String[] args){
         
-        Ventana_principal ventana = new Ventana_principal();
+        new Ventana_principal();
     
     }   
     
