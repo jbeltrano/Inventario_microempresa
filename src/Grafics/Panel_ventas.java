@@ -18,6 +18,7 @@ public class Panel_ventas extends Panel_central{
     public Panel_ventas(){
         super();
         boton_adicionar.setToolTipText("Adicionar Ventas");
+        label_panel.setText("Ventas");
         pop_menu.remove(item_modificar);
 
     }
@@ -34,7 +35,7 @@ public class Panel_ventas extends Panel_central{
             
         }catch(SQLException|IOException ex){
             // En caso que haya un error, muestra este mensaje de error con el motivo
-            JOptionPane.showMessageDialog(this, ex.getMessage()+"\nCerrando el Programa", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, ex.getLocalizedMessage()+"\nCerrando el Programa", "Error", JOptionPane.ERROR_MESSAGE);
             
             // Esto se utiliza para cerrar el programa despues del error
             if (window != null) {
@@ -62,7 +63,7 @@ public class Panel_ventas extends Panel_central{
             tabla.setColumnModel(tabla_aux.getColumnModel());
 
         }catch(SQLException|IOException ex){
-            JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(this), ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(this), ex.getLocalizedMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }finally{
             base_venta.close();
         }
@@ -78,15 +79,15 @@ public class Panel_ventas extends Panel_central{
             String valor = "" + tabla.getValueAt(number, 0) + " | " + tabla.getValueAt(number, 2) + " | " + tabla.getValueAt(number, 3);
             int id = Integer.parseInt((String) tabla.getValueAt(number, 0));
 
-            number = JOptionPane.showConfirmDialog(this, "Esta seguro que deceas eliminar la compra:\n"+ valor, "eliminar", JOptionPane.OK_CANCEL_OPTION);
+            number = JOptionPane.showConfirmDialog(this, "Esta seguro que deceas eliminar la venta:\n"+ valor, "eliminar", JOptionPane.OK_CANCEL_OPTION);
             if(number == 0){
                 
                 try{
                     base_venta = new Base_venta();
                     base_venta.eliminar(id);
-                    JOptionPane.showMessageDialog(this, "Compra eliminado correctamente");
+                    JOptionPane.showMessageDialog(this, "Venta eliminado correctamente");
                 }catch(SQLException|IOException ex){
-                    JOptionPane.showMessageDialog(this,ex,"Error",JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this,ex.getLocalizedMessage(),"Error",JOptionPane.ERROR_MESSAGE);
                 }finally{
                     base_venta.close();
                 }

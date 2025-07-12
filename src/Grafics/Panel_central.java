@@ -17,6 +17,7 @@ import Grafics.Utilidades.Key_adapter;
 import Grafics.Utilidades.CustomPopupMenu;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.Window;
 import static Grafics.Panel_principal.config_boton;
 public abstract class Panel_central extends JPanel{
@@ -24,6 +25,7 @@ public abstract class Panel_central extends JPanel{
     private JPanel panel_busqueda;
     private JPanel panel_adicionar;
     private JLabel label_bucar;
+    protected JLabel label_panel;
     protected JTextField text_bucar;
     protected JScrollPane scroll;
     protected CustomPopupMenu pop_menu;
@@ -33,6 +35,7 @@ public abstract class Panel_central extends JPanel{
     protected JMenuItem item_eliminar;
     protected JMenuItem item_modificar;
     protected ImageIcon imagen_adicionar;
+
 
     /**
      * Constructor principal de la clase
@@ -98,6 +101,8 @@ public abstract class Panel_central extends JPanel{
         panel_busqueda = new JPanel(null);  // Establece
         label_bucar = new JLabel("Buscar:");    // Etiqueta del label
         text_bucar = new JTextField();              // Inicializacion del textfield
+        label_panel = new JLabel();
+        label_panel.setFont(new Font("Arial", Font.ITALIC, 18));
 
         // Configuracion panel busqueda
         label_bucar.setBounds(  // Ubicacion del label
@@ -112,8 +117,16 @@ public abstract class Panel_central extends JPanel{
             300,    // Ancho del text field
             20);    // Alto del text field
 
+        label_panel.setBounds(
+            text_bucar.getX() + text_bucar.getWidth() + 100,
+            2,
+            300,
+            20
+        );
+
         panel_busqueda.add(label_bucar);    // Adicionamiento de label en el panel busqueda
         panel_busqueda.add(text_bucar);     // Adicionamiento de textfield en el panel busqueda
+        panel_busqueda.add(label_panel);
         panel_busqueda.setPreferredSize(new Dimension(700,24)); // Modificacion del tamaño por defecto del panel
 
         panel_busqueda.setBackground(Color.LIGHT_GRAY);

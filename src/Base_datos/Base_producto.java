@@ -186,7 +186,16 @@ public class Base_producto extends Conexion{
 
         }catch(SQLException ex){
 
+            
+            if(ex.getErrorCode() == 19){
+
+                ex = new SQLException("No es posible eliminar el producto,\npuesto existen compras o ventas\nasociadas al producto con id: " + id);
+
+            }
+            
             throw ex;
+            
+
 
         }finally{
             
@@ -273,7 +282,8 @@ public class Base_producto extends Conexion{
             }
 
         }catch(SQLException ex){
-
+            
+            ex = no_base(ex);
             throw ex;
 
         }finally{

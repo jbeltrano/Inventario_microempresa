@@ -80,6 +80,11 @@ public class Base_compra extends Conexion{
 
         }catch(SQLException ex){
 
+            
+            if(ex.getErrorCode() == 19 ){
+
+                ex = new SQLException("No es posible elminar esta compra, puesto que el inventario quedaria negativo.");
+            }
             throw ex;
 
         }finally{

@@ -34,8 +34,9 @@ public class Base_venta extends Conexion{
      * @param cantidad Debe ser la cantidad de producto que se vendio
      * @throws SQLException
      */
-    public void insertar(long id, long cantidad) throws SQLException{
-        
+    public void insertar(long id, long cantidad) throws SQLException, IOException{
+        Base_inventario inventario = null;
+
         try{
             
             // Prepara lo que se va a ejecutar en la base de datos
@@ -50,13 +51,38 @@ public class Base_venta extends Conexion{
             pstate.executeUpdate();
 
         }catch(SQLException ex){    // Por si recibe algun error
+            
+            if(ex.getErrorCode() == 19){
+                String datos = "";
+                String nombre = "";
+                try{
 
+                    inventario = new Base_inventario();
+                    datos = inventario.consultar_uno(id)[2];
+                    nombre = inventario.consultar_uno(id)[1];
+                    
+                }catch(IOException e){
+
+                    throw e;
+
+                }finally{
+                    if(inventario != null)
+                        inventario.close();
+                }
+
+                ex = new SQLException("No hay suficiente inventario disponible para el producto: " + nombre + "\nCantidad solicitada: " + cantidad + "\nCantidad disponible: " + datos);
+
+
+            }
+            
             throw ex;
 
         }finally{   // Finaliza la utilizacion del objeto utlizado
 
             if(pstate != null)
                 pstate.close();
+            if(inventario != null)
+                inventario.close();
 
         }
 

@@ -10,7 +10,6 @@ import Base_datos.Base_producto;
 import Grafics.Dialogos.Actualizar_producto;
 import Grafics.Dialogos.Adicinar_producto;
 import Grafics.Utilidades.Modelo_tabla;
-import java.awt.event.WindowEvent;
 import java.io.IOException;
 
 public class Panel_inventario extends Panel_central{
@@ -20,6 +19,7 @@ public class Panel_inventario extends Panel_central{
     public Panel_inventario(){
         super();
         boton_adicionar.setToolTipText("Adicionar inventario"); // Muestra el tooltip
+        label_panel.setText("Producto e Inventario");
     }
 
     @Override
@@ -34,12 +34,10 @@ public class Panel_inventario extends Panel_central{
             
         }catch(SQLException|IOException ex){
             // En caso que haya un error, muestra este mensaje de error con el motivo
-            JOptionPane.showMessageDialog(this, ex.getMessage()+"\nCerrando el Programa", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, ex.getLocalizedMessage()+"\nCerrando el Programa", "Error", JOptionPane.ERROR_MESSAGE);
+            System.exit(1);
+
             
-            // Esto se utiliza para cerrar el programa despues del error
-            if (window != null) {
-                window.dispatchEvent(new WindowEvent(window, WindowEvent.WINDOW_CLOSING));
-            }
 
         }finally{
             base_producto.close();
@@ -62,7 +60,7 @@ public class Panel_inventario extends Panel_central{
             tabla.setColumnModel(tabla_aux.getColumnModel());
 
         }catch(SQLException|IOException ex){
-            JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(this), ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(this), ex.getLocalizedMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }finally{
             base_producto.close();
         }
@@ -104,7 +102,7 @@ public class Panel_inventario extends Panel_central{
                     base_producto.eliminar(id);
                     JOptionPane.showMessageDialog(this, "Producto eliminado correctamente");
                 }catch(SQLException|IOException ex){
-                    JOptionPane.showMessageDialog(this,ex,"Error",JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this,ex.getLocalizedMessage(),"Error",JOptionPane.ERROR_MESSAGE);
                 }finally{
                     base_producto.close();
                 }

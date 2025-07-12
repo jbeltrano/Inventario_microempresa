@@ -19,6 +19,7 @@ public class Panel_compras extends Panel_central{
 
         super();
         boton_adicionar.setToolTipText("Adicionar Compras"); // Muestra el tooltip
+        label_panel.setText("Compras");
         pop_menu.remove(item_modificar);
         
 
@@ -89,7 +90,7 @@ public class Panel_compras extends Panel_central{
                     base_compra.eliminar(id);
                     JOptionPane.showMessageDialog(this, "Compra eliminado correctamente");
                 }catch(SQLException|IOException ex){
-                    JOptionPane.showMessageDialog(this,ex,"Error",JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this,ex.getLocalizedMessage(),"Error",JOptionPane.ERROR_MESSAGE);
                 }finally{
                     base_compra.close();
                 }

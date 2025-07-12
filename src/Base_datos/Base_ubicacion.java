@@ -80,6 +80,12 @@ public class Base_ubicacion extends Conexion{
 
         }catch(SQLException ex){
 
+            if(ex.getErrorCode() == 19){
+
+                ex = new SQLException("No es posible eliminar la ubicacion,\npuesto existen productos asociados\na la ubicacion con id: " + id);
+
+            }
+            
             throw ex;
 
         }finally{

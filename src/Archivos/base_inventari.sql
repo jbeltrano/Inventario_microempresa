@@ -94,7 +94,7 @@ CREATE TRIGGER TG_DELETE_VENTA
 AFTER DELETE ON VENTA
 FOR EACH ROW
 BEGIN
-    UPDATE INVENTARIO SET inv_cantidad = inv_cantidad + OLD.com_cantidad WHERE pro_id = OLD.pro_id;
+    UPDATE INVENTARIO SET inv_cantidad = inv_cantidad + OLD.ven_cantidad WHERE pro_id = OLD.pro_id;
 END;
 
 -- ESTE TRIGGER FUNCIONA CORRECTAMENTE

@@ -34,7 +34,7 @@ public class Adicionar_ventas extends Adicionar_compras{
             venta.insertar(idProducto, cantidad);
 
         }catch(SQLException | IOException ex){
-            JOptionPane.showMessageDialog(Adicionar_ventas.this, ex, getTitle(), JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(Adicionar_ventas.this, ex.getLocalizedMessage(), getTitle(), JOptionPane.ERROR_MESSAGE);
             return false;
         }finally{
             if(venta != null){

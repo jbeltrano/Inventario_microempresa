@@ -27,6 +27,7 @@ public class Conexion {
             url = url.concat(Files.readString(Paths.get("src\\Archivos\\Direccion.txt")));
         }catch(IOException ex){
             band = false;
+            System.out.println(ex);
         }
             
     }
@@ -74,5 +75,15 @@ public class Conexion {
         }
     }
 
+    protected static SQLException no_base(SQLException ex){
+
+        if(ex.getErrorCode() == 1){
+
+            ex = new SQLException("No fue posible acceder a la base de datos, revisar que se encuentre en la ubicacion: "+ System.getProperty("user.dir") + "\\"+ url.split("jdbc:sqlite:")[1]);
+        
+        }
+
+        return ex;
+    }
 
 }

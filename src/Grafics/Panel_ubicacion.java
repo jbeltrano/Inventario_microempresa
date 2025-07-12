@@ -21,6 +21,7 @@ public class Panel_ubicacion extends Panel_central{
         
         super();
         boton_adicionar.setToolTipText("Adicionar Ubicacion");
+        label_panel.setText("Ubicación");
     }
 
     @Override
@@ -35,7 +36,7 @@ public class Panel_ubicacion extends Panel_central{
             
         }catch(SQLException|IOException ex){
             // En caso que haya un error, muestra este mensaje de error con el motivo
-            JOptionPane.showMessageDialog(this, ex.getMessage()+"\nCerrando el Programa", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, ex.getLocalizedMessage()+"\nCerrando el Programa", "Error", JOptionPane.ERROR_MESSAGE);
             
             // Esto se utiliza para cerrar el programa despues del error
             if (window != null) {
@@ -63,7 +64,7 @@ public class Panel_ubicacion extends Panel_central{
             tabla.setColumnModel(tabla_aux.getColumnModel());
 
         }catch(SQLException|IOException ex){
-            JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(this), ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(this), ex.getLocalizedMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }finally{
             base_ubicacion.close();
         }
@@ -109,7 +110,7 @@ public class Panel_ubicacion extends Panel_central{
 
                 }catch(SQLException|IOException ex){
 
-                    JOptionPane.showMessageDialog(this,ex,"Error",JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this,ex.getLocalizedMessage(),"Error",JOptionPane.ERROR_MESSAGE);
 
                 }finally{
 
