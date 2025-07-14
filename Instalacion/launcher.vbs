@@ -1,0 +1,1 @@
+CreateObject("Wscript.Shell").Run "jdk\bin\javaw.exe -jar Inventario_microempresa.jar", 0, False

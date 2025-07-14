@@ -1,5 +1,6 @@
 package Grafics;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
 import com.formdev.flatlaf.FlatLightLaf;
@@ -8,6 +9,7 @@ import java.awt.Dimension;
 
 public class Ventana_principal extends JFrame{
     
+    private ImageIcon icono;
     
 
     /**
@@ -16,6 +18,7 @@ public class Ventana_principal extends JFrame{
     public Ventana_principal(){
         
         super("Inventario");    // Se pasa a la superclase el titulo de la ventana
+        
         FlatLightLaf.setup();
         setPreferredSize(new Dimension(1200,700));  // Se define el tamaño por defecto de la ventana
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Se define la operacion por defecto al oprimir el boton x
@@ -24,12 +27,15 @@ public class Ventana_principal extends JFrame{
         setLocationRelativeTo(null);                    // Hace que la ventana aparesca en el centro de la pantalla
         setVisible(true);                               // Hace visible la interfaz
         
+        
     }
 
 
     private void iniciar_componentes(){
         Panel_principal panel = new Panel_principal();
         add(panel);
+        icono = new ImageIcon(getClass().getResource("/Grafics/Recursos/logo.png"));
+        setIconImage(icono.getImage());
     }
 
 }
