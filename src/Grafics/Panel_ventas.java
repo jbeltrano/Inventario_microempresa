@@ -6,21 +6,43 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.SwingUtilities;
+import javax.swing.JButton;
+import javax.swing.JPanel;
 import java.awt.event.WindowEvent;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import Base_datos.Base_venta;
 import Grafics.Dialogos.Adicionar_ventas;
+import Grafics.Dialogos.Generar_informe;
 import Grafics.Utilidades.Modelo_tabla;
 
 public class Panel_ventas extends Panel_central{
     
-    private Base_venta base_venta; 
+    private Base_venta base_venta;
+    private JButton botonInforme;
 
     public Panel_ventas(){
         super();
         boton_adicionar.setToolTipText("Adicionar Ventas");
         label_panel.setText("Ventas");
         pop_menu.remove(item_modificar);
-
+        
+        // Crear panel para el botón de informe
+        JPanel panelInforme = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        panelInforme.setBackground(Color.LIGHT_GRAY);
+        
+        // Añadir botón de informe
+        botonInforme = new JButton("Generar Informe");
+        botonInforme.setPreferredSize(new Dimension(130, 30));
+        botonInforme.addActionListener(_ -> {
+            Generar_informe dialogo = new Generar_informe((JFrame) SwingUtilities.getWindowAncestor(this));
+            dialogo.setVisible(true);
+        });
+        
+        panelInforme.add(botonInforme);
+        add(panelInforme, BorderLayout.EAST);
     }
 
     @Override

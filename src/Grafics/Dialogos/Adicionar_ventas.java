@@ -46,7 +46,7 @@ public class Adicionar_ventas extends Adicionar_compras{
     }
 
     @Override
-    protected String personalizar_mensjae(){
+    protected String personalizar_mensaje(){
 
         return String.format(
                 "Venta registrada exitosamente:\n\n" +

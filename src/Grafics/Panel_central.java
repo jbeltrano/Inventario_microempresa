@@ -2,6 +2,7 @@ package Grafics;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Cursor;
 
 import javax.swing.JScrollPane;
 import javax.swing.ImageIcon;
@@ -13,17 +14,22 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseAdapter;
+
 import Grafics.Utilidades.Key_adapter;
 import Grafics.Utilidades.CustomPopupMenu;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.Window;
-import static Grafics.Panel_principal.config_boton;
 public abstract class Panel_central extends JPanel{
 
+    private static final int ANCHO_BOTON = 40;
+    private static final int ALTO_BOTON = 40;
     private JPanel panel_busqueda;
-    private JPanel panel_adicionar;
+    protected JPanel panel_adicionar;
     private JLabel label_bucar;
     protected JLabel label_panel;
     protected JTextField text_bucar;
@@ -88,8 +94,48 @@ public abstract class Panel_central extends JPanel{
         
         panel_adicionar.add(boton_adicionar);   // Adicion del boton al panel para el boton
 
+        
     }
 
+
+    public static void config_boton(JButton boton, ImageIcon imagen){
+
+        boton.setBackground(Color.black);       // Cambia el color del fondo del boton
+        boton.setBorderPainted(false);      // Hace que el borden no se vea
+        boton.setContentAreaFilled(false);  // Hace que no haya un fondo en el boton
+        boton.setFocusPainted(false);       // Hace que no se vea el centro en el boton
+
+        boton.addMouseListener(new MouseAdapter() {
+            
+            @Override
+            public void mouseEntered(MouseEvent e) {    // Detecta si el mouse esta por encima del boton
+                boton.setContentAreaFilled(true);       // Hace que el area de color sea visible
+
+                boton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));    // Define el cursor a utilizar
+
+                
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {     // Detecta si el mouse sale del boton
+                boton.setContentAreaFilled(false);      // Hace que no se vea el area de color
+
+                boton.setCursor(Cursor.getDefaultCursor()); // Establece el estado normal del cursor
+
+            }   
+        });
+
+
+        Image img = imagen.getImage();  // Obtiene la imagen 
+
+        Image newImg = img.getScaledInstance(   // Cambia la escala de la imagen a mostar en el boton
+                                            ANCHO_BOTON - 5, // El ancho de la imagen
+                                            ALTO_BOTON - 5, // El alto del la imagen
+                                            java.awt.Image.SCALE_SMOOTH);   // El tipo de renderizado de la imagen
+
+        boton.setIcon(new ImageIcon(newImg));   // Agrega la imagen al boton
+        
+    }
 
     /**
      * Este metodo se encarga de configurar el text_field

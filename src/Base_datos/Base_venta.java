@@ -11,6 +11,7 @@ public class Base_venta extends Conexion{
     private static final String CONSULTAR_MUCHOS = "SELECT * FROM VW_VENTA WHERE ven_id = ? OR pro_id LIKE ? OR pro_nombre LIKE ? OR ven_fecha LIKE ?;";
     private static final String CANTIDAD_MUCHOS = "SELECT COUNT(*) FROM VW_VENTA WHERE ven_id = ? OR pro_id LIKE ? OR pro_nombre LIKE ? OR ven_fecha LIKE ?;";
     private static final String CONSULTAR_UNO = "SELECT * FROM VW_VENTA WHERE ven_id = ?;";
+    private static final String CONSULTAR_POR_FECHAS = "SELECT * FROM VW_VENTA WHERE ven_fecha BETWEEN ? AND ? ORDER BY ven_fecha;";
 
     /**
      * Este es el metodo constructor
@@ -252,4 +253,57 @@ public class Base_venta extends Conexion{
         return datos;
     }
 
+    /**
+     * Este método consulta las ventas realizadas entre dos fechas específicas
+     * @param fechaInicial fecha de inicio en formato YYYY-MM-DD
+     * @param fechaFinal fecha final en formato YYYY-MM-DD
+     * @return Array bidimensional con los datos de las ventas encontradas
+     * @throws SQLException si hay un error en la consulta
+     */
+    public Object[][] consultarPorFechas(String fechaInicial, String fechaFinal) throws SQLException {
+        Object[][] datos = null;
+        
+        try {
+            // Primero contamos el número de resultados
+            String sqlCount = "SELECT COUNT(*) FROM VW_VENTA WHERE ven_fecha BETWEEN ? AND ?";
+            pstate = conexion.prepareStatement(sqlCount);
+            pstate.setString(1, fechaInicial);
+            pstate.setString(2, fechaFinal);
+            
+            result = pstate.executeQuery();
+            int numFilas = 0;
+            if(result.next()) {
+                numFilas = result.getInt(1);
+            }
+            
+            // Cerramos la consulta anterior
+            result.close();
+            pstate.close();
+            
+            // Ahora hacemos la consulta de los datos
+            pstate = conexion.prepareStatement(CONSULTAR_POR_FECHAS);
+            pstate.setString(1, fechaInicial);
+            pstate.setString(2, fechaFinal);
+            
+            result = pstate.executeQuery();
+            datos = new Object[numFilas][COLUMNAS.length];
+            int fila = 0;
+            
+            while(result.next()) {
+                datos[fila][0] = result.getLong("ven_id") + "";
+                datos[fila][1] = result.getLong("pro_id") + "";
+                datos[fila][2] = result.getString("pro_nombre");
+                datos[fila][3] = result.getString("ven_fecha");
+                datos[fila][4] = result.getDouble("ven_precio") + "";
+                datos[fila][5] = result.getLong("ven_cantidad") + "";
+                fila++;
+            }
+            
+        } finally {
+            if(result != null) result.close();
+            if(pstate != null) pstate.close();
+        }
+        
+        return datos;
+    }
 }

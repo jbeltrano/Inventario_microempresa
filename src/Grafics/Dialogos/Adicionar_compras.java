@@ -15,9 +15,16 @@ import Grafics.Utilidades.Generic_callback;
 import Grafics.Utilidades.Key_adapter;
 import static Grafics.Utilidades.Filtros_text.aplicarFiltroEnteros;
 
+/**
+ * Diálogo para registrar nuevas compras de productos en el inventario.
+ * Permite buscar productos existentes y registrar la cantidad comprada.
+ */
 public class Adicionar_compras extends JDialog {
     
-    // Clase para representar un producto
+    /**
+     * Clase interna que representa un producto del inventario.
+     * Contiene la información básica de un producto: id, nombre y precio.
+     */
     static class Producto {
         private long id;
         private String nombre;
@@ -52,24 +59,29 @@ public class Adicionar_compras extends JDialog {
         }
     }
     
-    // Componentes del formulario
-    private JTextField text_buscar;
-    private JTextField text_cantidad;
-    private JLabel label_producto;
-    private JLabel label_buscar_producto;
-    private JLabel label_cantidad;
-    protected JButton boton_guardar;
-    private JPopupMenu popupSugerencias;
-    private List<Producto> productos;
-    protected Producto productoSeleccionado;
-    private JPanel panelPrincipal;
-    private Generic_callback callback;
-    protected String mensaje;
-    protected long cantidad;
-    protected double total;
-    protected String titulo;
-    protected boolean bandera;
+    /** Componentes de la interfaz gráfica */
+    private JTextField text_buscar;           // Campo para buscar productos
+    private JTextField text_cantidad;         // Campo para ingresar cantidad
+    private JLabel label_producto;            // Etiqueta que muestra el producto seleccionado
+    private JLabel label_buscar_producto;     // Etiqueta del campo de búsqueda
+    private JLabel label_cantidad;            // Etiqueta del campo de cantidad
+    protected JButton boton_guardar;          // Botón para confirmar la compra
+    private JPopupMenu popupSugerencias;      // Menú emergente con sugerencias de productos
+    private List<Producto> productos;         // Lista de productos encontrados en la búsqueda
+    protected Producto productoSeleccionado;  // Producto actualmente seleccionado
+    private JPanel panelPrincipal;           // Panel principal del diálogo
+    private Generic_callback callback;        // Callback para notificar cambios
+    protected String mensaje;                 // Mensaje de confirmación
+    protected long cantidad;                  // Cantidad de productos a comprar
+    protected double total;                   // Total de la compra
+    protected String titulo;                  // Título de la ventana
+    protected boolean bandera;                // Indicador de estado
     
+    /**
+     * Constructor del diálogo de compras.
+     * @param padre La ventana padre del diálogo
+     * @param callback Callback para notificar cambios a la ventana padre
+     */
     public Adicionar_compras(JFrame padre, Generic_callback callback) {
         super(padre);
         this.callback = callback;
@@ -197,8 +209,6 @@ public class Adicionar_compras extends JDialog {
                 return;
             }
             
-            
-            
             // Mostrar sugerencias
             if (productos.isEmpty()) {
                 popupSugerencias.setVisible(false);
@@ -301,7 +311,7 @@ public class Adicionar_compras extends JDialog {
 
                 // Mostrar confirmación
                 total = productoSeleccionado.getPrecio() * cantidad;
-                mensaje = personalizar_mensjae();
+                mensaje = personalizar_mensaje();
                 
                 JOptionPane.showMessageDialog(this, mensaje, 
                     "Compra Registrada", JOptionPane.INFORMATION_MESSAGE);
@@ -326,7 +336,7 @@ public class Adicionar_compras extends JDialog {
         }
     }
     
-    protected String personalizar_mensjae(){
+    protected String personalizar_mensaje(){
 
         return String.format(
                 "Compra registrada exitosamente:\n\n" +

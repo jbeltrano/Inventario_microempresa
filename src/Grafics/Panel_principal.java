@@ -65,6 +65,40 @@ public class Panel_principal extends JPanel{
         config_boton_ventas();
         config_boton_ubicacion();
         
+        panel_menu.addMouseListener(new MouseAdapter() {
+            
+            @Override
+            public void mouseEntered(MouseEvent e) {    // Detecta si el mouse esta por encima del boton
+                
+
+                panel_menu.setPreferredSize(    // Modifica el tamaño del panel
+                    (new Dimension(
+                        ANCHO_PANEL_MENU,                        // Modifica el ancho del panel
+                        getPreferredSize().height)));   // Deja por defecto el alto
+
+                panel_menu.revalidate();
+                panel_menu.repaint();
+
+                
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {     // Detecta si el mouse sale del boton
+                
+
+                panel_menu.setPreferredSize(    // Modifica el tamaño del panel
+                    (new Dimension(
+                        ANCHO_BOTON,                             // Modifica el ancho
+                        getPreferredSize().height)));   // Deja por defecto el alto
+
+                panel_menu.revalidate();
+                panel_menu.repaint();
+
+                
+
+            }   
+        });
+
         label_menu = new JLabel("Menu");
         config_label(label_menu, boton_menu);
 
@@ -274,7 +308,7 @@ public class Panel_principal extends JPanel{
      * @param imagen Debe ser la imagen del boton
      * tipo ImageIcon
      */
-    public static void config_boton(JButton boton, ImageIcon imagen){
+    public void config_boton(JButton boton, ImageIcon imagen){
 
         boton.setBackground(Color.black);       // Cambia el color del fondo del boton
         boton.setBorderPainted(false);      // Hace que el borden no se vea
@@ -289,6 +323,16 @@ public class Panel_principal extends JPanel{
 
                 boton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));    // Define el cursor a utilizar
                 
+
+                panel_menu.setPreferredSize(    // Modifica el tamaño del panel
+                    (new Dimension(
+                        ANCHO_PANEL_MENU,                        // Modifica el ancho del panel
+                        getPreferredSize().height)));   // Deja por defecto el alto
+
+                panel_menu.revalidate();
+                panel_menu.repaint();
+
+                
             }
 
             @Override
@@ -296,6 +340,16 @@ public class Panel_principal extends JPanel{
                 boton.setContentAreaFilled(false);      // Hace que no se vea el area de color
 
                 boton.setCursor(Cursor.getDefaultCursor()); // Establece el estado normal del cursor
+
+                panel_menu.setPreferredSize(    // Modifica el tamaño del panel
+                    (new Dimension(
+                        ANCHO_BOTON,                             // Modifica el ancho
+                        getPreferredSize().height)));   // Deja por defecto el alto
+
+                panel_menu.revalidate();
+                panel_menu.repaint();
+
+                
 
             }   
         });
